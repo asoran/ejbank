@@ -23,6 +23,5 @@ services:
         ports:
             - 8001:8181
             - 8002:4848
-        command: ["./wait-for-it.sh", "db:3306", "--", "asadmin", "start-domain",  "--verbose"]
 
 
