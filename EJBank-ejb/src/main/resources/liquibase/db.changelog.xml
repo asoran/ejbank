@@ -235,4 +235,11 @@
             <column name="balance" valueNumeric="4000"/>
         </insert>
     </changeSet>
+    <changeSet author="mboudign" id="4-1">
+        <addColumn tableName="ejbank_transaction">
+            <column name="date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
