@@ -13,7 +13,7 @@ public class CheckServer {
 
     @GET
     @Path("/status")
-    public boolean getStatus() {
-        return true;
+    public String getStatus() {
+        return "ok";
     }
 }
