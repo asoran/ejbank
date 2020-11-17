@@ -242,7 +242,6 @@
             </column>
         </addColumn>
     </changeSet>
-    
     <changeSet author="mboudign" id="4-2">
         <insert tableName="ejbank_account">
             <column name="id" valueNumeric="5"/>
@@ -250,6 +249,12 @@
             <column name="account_type_id" valueNumeric="1"/>
             <column name="balance" valueNumeric="132"/>
         </insert>
+    </changeSet>
+    <changeSet author="mboudign" id="4-3">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="ejbank_customer" constraintName="fk_customer_user" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="ejbank_user"/>
+    </changeSet>
+    <changeSet author="mboudign" id="4-4">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="ejbank_advisor" constraintName="fk_advisor_user" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="ejbank_user"/>
     </changeSet>
     <changeSet author="mboudign" id="5-3">
         <insert tableName='ejbank_transaction'>
