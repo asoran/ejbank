@@ -13,4 +13,4 @@ RUN echo 'create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2
 RUN echo 'create-jdbc-resource --connectionpoolid EJBankPool jdbc/EJBankDS' \
  >> $POSTBOOT_COMMANDS
 
-EXPOSE 8080
+EXPOSE 8181
