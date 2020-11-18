@@ -40,6 +40,7 @@
                 <configuration>
                     <version>6</version>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <outputDirectory>deployments</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
