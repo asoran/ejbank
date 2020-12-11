@@ -1,10 +1,9 @@
 package com.ejbank.entities;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "ejbank_account_type")
 public class AccountType {
 
     @Id

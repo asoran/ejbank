@@ -3,6 +3,8 @@ package com.ejbank.entities;
 import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "ejbank_transaction")
 public class Transaction {
 
     @Id

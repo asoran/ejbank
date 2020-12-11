@@ -2,6 +2,8 @@ package com.ejbank.entities;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "ejbank_account")
 public class Account {
 
     @Id
