@@ -23,12 +23,4 @@ public class AccountHaricot {
         Customer customer = customerRepository.getById(userId);
         return customer.getAccounts();
     }
-
-    public Customer getAccountsAttachedByUserId(int userId) {
-
-    }
-
-    public Customer getCompleteAccountsByUserId(int userId) {
-
-    }
 }

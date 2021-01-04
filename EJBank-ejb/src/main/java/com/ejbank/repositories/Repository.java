@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 public interface Repository<T> {
 
+    Class<T> getClassT();
+
     T getById(int id);
 
     List<T> getAll();

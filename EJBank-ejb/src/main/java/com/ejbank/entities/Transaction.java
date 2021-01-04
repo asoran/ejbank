@@ -13,11 +13,11 @@ public class Transaction {
     private int id;
 
     @ManyToOne(targetEntity = Account.class)
-    @JoinColumn(name="account_from_id", nullable=true)
+    @PrimaryKeyJoinColumn(name="account_from_id")
     private Account accountFrom;
 
     @ManyToOne(targetEntity = Account.class)
-    @JoinColumn(name="account_from_id", nullable=true)
+    @PrimaryKeyJoinColumn(name="account_from_id")
     private Account accountTo;
 
     @Column(name = "author")

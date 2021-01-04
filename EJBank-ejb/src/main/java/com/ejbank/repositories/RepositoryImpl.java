@@ -14,18 +14,16 @@ abstract public class RepositoryImpl<T> implements Repository<T> {
     @PersistenceContext(unitName = "EJBankPU")
     protected EntityManager em;
 
-    private final Class<T> classT = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-
     @Override
     public T getById(int id) {
-        return em.find(classT, id);
+        return em.find(getClassT(), id);
     }
 
     @Override
     public List<T> getAll() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<T> cq = cb.createQuery(classT);
-        Root<T> rootEntry = cq.from(classT);
+        CriteriaQuery<T> cq = cb.createQuery(getClassT());
+        Root<T> rootEntry = cq.from(getClassT());
         CriteriaQuery<T> all = cq.select(rootEntry);
 
         TypedQuery<T> allQuery = em.createQuery(all);

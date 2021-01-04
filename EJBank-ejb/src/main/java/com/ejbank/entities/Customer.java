@@ -8,11 +8,13 @@ import java.util.List;
 public class Customer extends User {
 
     @ManyToOne(targetEntity = Advisor.class)
-    @JoinColumn(name="advisor_id", nullable=true) /* todo : pass to false when possible */
+    @PrimaryKeyJoinColumn(name="advisor_id")
     private Advisor advisor;
 
     @OneToMany( mappedBy = "customer" )
     private List<Account> accounts;
+
+    public Customer() {}
 
     public Customer(String login, String password, String email, String firstname, String lastname, Advisor advisor) {
         this.login = login;
