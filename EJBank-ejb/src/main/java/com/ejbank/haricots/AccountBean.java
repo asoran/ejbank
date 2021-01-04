@@ -7,19 +7,27 @@ import com.ejbank.repositories.AccountRepository;
 import com.ejbank.repositories.CustomerRepository;
 
 import javax.ejb.Local;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 import java.util.List;
 
-@Local
-public class AccountHaricot {
+@Stateless
+@LocalBean
+public class AccountBean implements Bean {
 
-    @Inject
     private AccountRepository accountRepository;
 
-    @Inject
     private CustomerRepository customerRepository;
 
-    public List<Account> getAccountsByUserId(int userId) {
+    @Inject
+    public void setCustomerRepository(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
+
+    public List<Account> getAccountsByCustomerId(int userId) {
         Customer customer = customerRepository.getById(userId);
         return customer.getAccounts();
     }

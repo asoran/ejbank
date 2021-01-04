@@ -19,6 +19,9 @@ public class Test {
 
     @EJB
     private TestBeanLocal testBean;
+
+//    @EJB
+//    private AccountHaricot accountHaricot;
     
     @GET
     @Path("/ejb")
@@ -29,6 +32,7 @@ public class Test {
     @GET
     @Path("/people/{age}")
     public PeoplePayload testPayloadReponse(@PathParam("age") Integer age) {
+        //Account a = accountHaricot.account(12);
         return new PeoplePayload("Jean", "Dupont", age);
     }
     
