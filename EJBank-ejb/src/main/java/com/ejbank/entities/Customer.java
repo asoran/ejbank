@@ -4,11 +4,11 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "ejbank_advisor")
+@Table(name = "ejbank_customer")
+@DiscriminatorValue("customer")
 public class Customer extends User {
 
     @ManyToOne(targetEntity = Advisor.class)
-    @PrimaryKeyJoinColumn(name="advisor_id")
     private Advisor advisor;
 
     @OneToMany( mappedBy = "customer" )

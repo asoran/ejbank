@@ -4,7 +4,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "ejbank_user")
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name = "type")
+@Inheritance(strategy=InheritanceType.JOINED)
 abstract public class User {
 
     @Id
@@ -28,7 +29,7 @@ abstract public class User {
     protected String lastname;
 
 //    @Column(name = "type", length = 50)
-//    private String type;
+//    protected String type;
 
 
     public int getId() {
@@ -54,4 +55,8 @@ abstract public class User {
     public String getLastname() {
         return lastname;
     }
+
+//    public String getType() {
+//        return type;
+//    }
 }
