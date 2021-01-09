@@ -33,8 +33,4 @@ public class Customer extends User {
     public List<Account> getAccounts() {
         return accounts;
     }
-
-    public String getEntireName() {
-        return this.firstname + " " + this.lastname;
-    }
 }

@@ -56,7 +56,7 @@ abstract public class User {
         return lastname;
     }
 
-//    public String getType() {
-//        return type;
-//    }
+    public String getEntireName() {
+        return this.firstname + " " + this.lastname;
+    }
 }
