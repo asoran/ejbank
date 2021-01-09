@@ -16,6 +16,6 @@ public class TestBean implements TestBeanLocal {
     @Override
     public String test() {
 //        accountHaricot.getAll();
-        return "Hello from EJB";
+        return "Hello world from EJB";
     }
 }
