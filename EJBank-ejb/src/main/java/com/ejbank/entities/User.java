@@ -28,8 +28,8 @@ abstract public class User {
     @Column(name = "lastname", length = 50)
     protected String lastname;
 
-//    @Column(name = "type", length = 50)
-//    protected String type;
+    @Column(name = "type", length = 50)
+    protected String type;
 
 
     public int getId() {
@@ -58,5 +58,9 @@ abstract public class User {
 
     public String getEntireName() {
         return this.firstname + " " + this.lastname;
+    }
+
+    public String getType() {
+        return type;
     }
 }

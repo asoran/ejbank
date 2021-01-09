@@ -13,15 +13,16 @@ public class Transaction {
     private int id;
 
     @ManyToOne(targetEntity = Account.class)
-    @PrimaryKeyJoinColumn(name="account_from_id")
+    @PrimaryKeyJoinColumn(name="account_id_from")
     private Account accountFrom;
 
     @ManyToOne(targetEntity = Account.class)
-    @PrimaryKeyJoinColumn(name="account_from_id")
+    @PrimaryKeyJoinColumn(name="account_id_to")
     private Account accountTo;
 
-    @Column(name = "author")
-    private int author;
+    @ManyToOne( targetEntity = User.class )
+    @PrimaryKeyJoinColumn(name="author")
+    private User author;
 
     @Column(name = "amount", precision = 10, scale = 0)
     private double amount;
@@ -30,7 +31,7 @@ public class Transaction {
     private String comment;
 
     @Column(name = "applied")
-    private byte applied;
+    private boolean applied;
 
     @Column(name = "date")
     private Date date;
@@ -47,7 +48,7 @@ public class Transaction {
         return accountTo;
     }
 
-    public int getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
@@ -59,7 +60,7 @@ public class Transaction {
         return comment;
     }
 
-    public byte getApplied() {
+    public boolean getApplied() {
         return applied;
     }
 
