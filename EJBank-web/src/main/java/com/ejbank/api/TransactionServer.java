@@ -39,7 +39,7 @@ public class TransactionServer {
 													@PathParam("offset") int offset,
 													@PathParam("user_id") int userId) {
 
-		List<Transaction> transactions = transactionBean.getAllTransactionsByAccountId(accountId);
+		List<Transaction> transactions = transactionBean.getAllTransactionsByAccountId(accountId, offset);
 		User ask = userBean.getUserById(userId);
 		return transactions.stream().map( t -> new TransactionPayload(t, ask.getType())).collect(Collectors.toList());
 	}

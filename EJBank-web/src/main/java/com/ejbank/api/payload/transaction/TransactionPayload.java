@@ -4,7 +4,7 @@ import com.ejbank.entities.Transaction;
 
 public class TransactionPayload {
 
-    private static final String STATE_APPLIED = "APPLIED";
+    private static final String STATE_APPLIED = "APPLYED";
     private static final String STATE_TO_APPROVE = "TO_APPROVE";
     private static final String STATE_WAITING_APPROVE = "WAITING_APPROVE";
 

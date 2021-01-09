@@ -11,7 +11,10 @@ import com.ejbank.repositories.UserRepository;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Stateless
 @LocalBean
@@ -28,8 +31,10 @@ public class TransactionBean {
 
 	public List<Transaction> getAllTransactionsByAccountId(int userId) {
 		Account account = accountRepository.getById(userId);
-		/* Transactions envoyées : */
-		return accountRepository.getAllSentTransactions(account);
+		List<Transaction> transactions =  accountRepository.getAllSentTransactions(account);
+		transactions.addAll(accountRepository.getAllReceivedTransactions(account));
+		return transactions.stream().sorted(Comparator.comparing(Transaction::getDate).reversed()).limit(limit + 10)
+			.collect(Collectors.toList());
 	}
 
 	public Transaction addNewTransaction(int srcAccId, int destAccId, double amount, String comment, int authorId) {
