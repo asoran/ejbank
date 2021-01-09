@@ -2,13 +2,16 @@ package com.ejbank.api.payload;
 
 import com.ejbank.entities.Account;
 
+/**
+ * Used to make this result :
+ * {
+ *     "amount": 150.0,
+ *     "id": 4,
+ *     "type": "Courant"
+ * }
+ */
 public class AccountPayload extends AbstractAccount {
-
-    public AccountPayload(int id, String type, double amount) {
-        super(id, type, amount);
-    }
-
-    public static AccountPayload build(Account account) {
-        return new AccountPayload(account.getId(), account.getAccountType().getName(), account.getBalance());
+    public AccountPayload(Account account) {
+        super(account);
     }
 }

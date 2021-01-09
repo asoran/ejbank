@@ -2,23 +2,28 @@ package com.ejbank.api.payload;
 
 import com.ejbank.entities.Account;
 
+/**
+ * Used to make this result :
+ * {
+ *     "amount": 150.0,
+ *     "id": 4,
+ *     "name": "Christophe Moreau",
+ *     "type": "Courant",
+ *     "validation": 0
+ * }
+ */
 public class AccountFullPayload extends AbstractAccount {
 
     private final String name;
 
     private final int validation;
 
-    public AccountFullPayload(int id, String type, double amount, String name, int validation) {
-        super(id, type, amount);
+    public AccountFullPayload(Account account) {
+        super(account);
 
-        this.name = name;
-        this.validation = validation;
-    }
-
-    /* TODO ; Change the validation number when found. */
-    public static AccountFullPayload build(Account account) {
-        return new AccountFullPayload(account.getId(), account.getAccountType().getName(),
-                account.getBalance(), account.getCustomer().getEntireName(), 0);
+        this.name = account.getCustomer().getEntireName();
+        /* TODO ; Change the validation number when found. */
+        this.validation = 0;
     }
 
     public String getName() {

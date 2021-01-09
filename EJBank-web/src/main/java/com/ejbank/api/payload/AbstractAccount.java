@@ -1,5 +1,7 @@
 package com.ejbank.api.payload;
 
+import com.ejbank.entities.Account;
+
 public abstract class AbstractAccount {
 
     protected final int id;
@@ -8,10 +10,10 @@ public abstract class AbstractAccount {
 
     protected final double amount;
 
-    public AbstractAccount(int id, String type, double amount) {
-        this.id = id;
-        this.type = type;
-        this.amount = amount;
+    public AbstractAccount(Account account) {
+        this.id = account.getId();
+        this.type = account.getAccountType().getName();
+        this.amount = account.getBalance();
     }
 
     public int getId() {
