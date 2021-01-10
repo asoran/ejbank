@@ -1,7 +1,6 @@
 package com.ejbank.api;
 
-import com.ejbank.api.payload.AccountPayload;
-import com.ejbank.api.payload.transaction.TransactionPayload;
+import com.ejbank.api.payload.transaction.*;
 import com.ejbank.entities.Account;
 import com.ejbank.entities.Transaction;
 import com.ejbank.entities.User;
@@ -13,7 +12,9 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("/transaction")
@@ -36,37 +37,93 @@ public class TransactionServer {
 													@PathParam("offset") int offset,
 													@PathParam("user_id") int userId) {
 
-		List<Transaction> transactions = transactionBean.getAllTransactionsByAccountId(accountId);
-		User ask = userBean.getUserById(userId);
-		return transactions.stream().map( t -> new TransactionPayload(t, ask.getType())).collect(Collectors.toList());
+		List<Transaction> transactions = transactionBean.getAllTransactionsByAccountId(accountId, offset);
+		Optional<User> u = userBean.getUserById(userId);
+
+		/* TODO : manage error : */
+		if ( u.isPresent() ) {
+			User ask = u.get();
+			return transactions.stream().map( t -> new TransactionPayload(t, ask.getType())).collect(Collectors.toList());
+		} else {
+			return null;
+		}
 	}
 
 	@POST
 	@Path("/preview")
-	public Object getTransactionPreview(Object transactionPreviewPayload) {
+	public TransactionPreviewResponsePayload getTransactionPreview(TransactionPreviewPayload transactionPreview) {
+		Optional<Account> oa = accountBean.getAccountById(transactionPreview.getSource());
 
-		// calcul
-		return null;
+		if ( !oa.isPresent() ) {
+			return new TransactionPreviewResponsePayload("Unknown source account");
+		}
+
+		Account srcAcc = oa.get();
+
+		boolean result = true;
+		double srcAmount = srcAcc.getBalance();
+		int overdraft = srcAcc.getAccountType().getOverdraft();
+		double amount = transactionPreview.getAmount();
+		String message = null;
+
+		if(srcAmount + overdraft < amount) {
+			result = false;
+			message = "Vous ne disposez pas d'un solde suffisant...";
+		}
+
+		return new TransactionPreviewResponsePayload(result, srcAmount, srcAmount - amount, message);
 	}
 
 	@POST
 	@Path("/apply")
-	public Object applyTransaction(Object transactionSubmissionPayload) {
-		return new Object() {
-			String result = "false";
-			String message = "lol";
-		};// TransactionSubmissionResponsePayload
+	public TransactionSubmissionResponsePayload applyTransaction(TransactionSubmissionPayload transactionSubmission) {
+		boolean result = false;
+		Optional<Account> oa = accountBean.getAccountById(transactionSubmission.getSource());
+
+		if ( !oa.isPresent() ) {
+			return new TransactionSubmissionResponsePayload(false, "Unknown source account");
+		}
+
+		Account srcAcc = oa.get();
+		double srcAmount = srcAcc.getBalance();
+		int overdraft = srcAcc.getAccountType().getOverdraft();
+		double amount = transactionSubmission.getAmount();
+
+		if(srcAmount + overdraft >= amount) {
+			result = true;
+			transactionBean.addNewTransaction(transactionSubmission.getSource(), transactionSubmission.getDestination(),
+				transactionSubmission.getAmount(), transactionSubmission.getComment(),
+				transactionSubmission.getAuthor());
+			// Et appliquer la transaction dans la balance ????????
+		}
+
+		return new TransactionSubmissionResponsePayload(result, result
+			? "La transaction a été réalisée avec succès !"
+			: "Vous ne disposez pas d'un solde suffisant");
 	}
 
 	@POST
 	@Path("/validation")
-	public Object validateTransaction(Object transactionValidationPayload) {
-		return null; // TransactionValidationResponsePaylaod
+	public TransactionValidationResponsePayload validateTransaction(TransactionValidationPayload transactionValidation) {
+		boolean isApprove = transactionValidation.isApprove();
+		// TODO: A t'il le droit de valider cette demande ????
+		if(true) {
+			Transaction tr = transactionBean.getTransactionsById(transactionValidation.getTransaction());
+			tr.setApplied(isApprove);
+			transactionBean.update(tr);
+		}
+
+		return new TransactionValidationResponsePayload(true,
+			(isApprove ? "Approuvé" : "Refusé") + " avec succès !", null);
 	}
 
 	@GET
 	@Path("/validation/notification/{user_id}")
 	public int getValidationNotificationNumberById(@PathParam("user_id") int userId) {
-		return 3;
+		ArrayList<Transaction> list = new ArrayList<>();
+		accountBean.getAccountsByCustomerId(userId).forEach(acc -> {
+			list.addAll(transactionBean.getAllTransactionsByAccountId(acc.getId()));
+		});
+		return list.size();
 	}
 }

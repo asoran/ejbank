@@ -1,5 +1,6 @@
-package com.ejbank.api.payload;
+package com.ejbank.api.payload.account;
 
+import com.ejbank.api.payload.account.AbstractAccount;
 import com.ejbank.entities.Account;
 
 /**
@@ -12,25 +13,23 @@ import com.ejbank.entities.Account;
  *     "validation": 0
  * }
  */
-public class AccountFullPayload extends AbstractAccount {
+public class AttachedAccountPayload extends AbstractAccount {
 
     private final String name;
 
-    private final int validation;
+    private final long validation;
 
-    public AccountFullPayload(Account account) {
+    public AttachedAccountPayload(Account account, long validation) {
         super(account);
-
+        this.validation = validation;
         this.name = account.getCustomer().getEntireName();
-        /* TODO ; Change the validation number when found. */
-        this.validation = 0;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getValidation() {
+    public long getValidation() {
         return validation;
     }
 }

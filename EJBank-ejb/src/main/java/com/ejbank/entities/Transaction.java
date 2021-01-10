@@ -7,7 +7,19 @@ import java.util.Date;
 @Table(name = "ejbank_transaction")
 public class Transaction {
 
-    @Id
+	public Transaction() {
+
+	}
+
+	public Transaction(Account accountFrom, Account accountTo, User author, double amount, String comment) {
+		this.accountFrom = accountFrom;
+		this.accountTo = accountTo;
+		this.author = author;
+		this.amount = amount;
+		this.comment = comment;
+	}
+
+	@Id
     @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
@@ -67,4 +79,8 @@ public class Transaction {
     public Date getDate() {
         return date;
     }
+
+	public void setApplied(boolean applied) {
+		this.applied = applied;
+	}
 }

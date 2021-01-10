@@ -21,7 +21,8 @@ public class UserServer {
     @GET
     @Path("/{user_id}")
     public User getUserInfo(@PathParam("age") int id) {
-    	return userBean.getUserById(id);
+    	//return userBean.getUserById(id);
+        return null;
     }
 
 }

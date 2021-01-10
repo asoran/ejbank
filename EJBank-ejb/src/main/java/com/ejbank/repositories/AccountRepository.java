@@ -16,10 +16,23 @@ public class AccountRepository extends RepositoryImpl<Account> {
 
     @SuppressWarnings("unchecked")
     public List<Transaction> getAllSentTransactions(Account account) {
-        return this.em.createQuery("SELECT t FROM Transaction t WHERE t.id = :id")
-                .setParameter("id", account.getId())
+        return this.em.createQuery("SELECT t FROM Transaction t WHERE t.accountFrom = :account")
+                .setParameter("account", account)
                 .getResultList();
 
+    }
+
+    public long countAllSentTransaction(Account account) {
+        return (Long) this.em.createQuery("SELECT COUNT(t) FROM Transaction t WHERE t.accountFrom = :account")
+                .setParameter("account", account)
+                .getSingleResult();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Transaction> getAllReceivedTransactions(Account account) {
+        return this.em.createQuery("SELECT t FROM Transaction t WHERE t.accountTo = :account")
+                .setParameter("account", account)
+                .getResultList();
     }
 
 }
