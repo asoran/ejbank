@@ -16,7 +16,7 @@ public class CustomerBean implements Bean {
     private CustomerRepository customerRepository;
 
     public Optional<Customer> getCustomerById(int id) {
-        return Optional.ofNullable(customerRepository.getById(id));
+        return customerRepository.getByidOpt(id);
     }
 
 }

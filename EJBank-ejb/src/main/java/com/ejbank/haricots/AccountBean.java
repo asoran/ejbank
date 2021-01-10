@@ -49,7 +49,6 @@ public class AccountBean implements Bean {
         if ( account.getCustomer().getId() == user.getId() ) return true;
         if ( user.getType().equals("customer") ) return false;
 
-        if ( account.getCustomer().getAdvisor().getId() == user.getId() ) return true;
-        return false;
-    }
+		return account.getCustomer().getAdvisor().getId() == user.getId();
+	}
 }

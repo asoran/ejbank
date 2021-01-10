@@ -7,6 +7,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
 abstract public class RepositoryImpl<T> implements Repository<T> {
 
@@ -17,6 +18,10 @@ abstract public class RepositoryImpl<T> implements Repository<T> {
     public T getById(int id) {
         return em.find(getClassT(), id);
     }
+
+    public Optional<T> getByidOpt(int id) {
+    	return Optional.ofNullable(em.find(getClassT(), id));
+	}
 
     @Override
     public List<T> getAll() {

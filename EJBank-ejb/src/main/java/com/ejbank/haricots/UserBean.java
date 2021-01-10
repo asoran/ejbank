@@ -26,7 +26,7 @@ public class UserBean implements Bean {
     private CustomerRepository customerRepository;
 
     public Optional<User> getUserById(int id) {
-        return Optional.ofNullable(this.userRepository.getById(id));
+        return userRepository.getByidOpt(id);
     }
 
     public Advisor recoverAdvisorFromUser(User user) {

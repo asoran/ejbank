@@ -17,7 +17,7 @@ public class AdvisorBean implements Bean {
     private AdvisorRepository advisorRepository;
 
     public Optional<Advisor> getAdvisorById(int id) {
-        return Optional.ofNullable(advisorRepository.getById(id));
+        return advisorRepository.getByidOpt(id);
     }
 
 }
