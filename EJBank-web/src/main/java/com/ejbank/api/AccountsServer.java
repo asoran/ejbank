@@ -1,12 +1,11 @@
 package com.ejbank.api;
 
-import com.ejbank.api.payload.AttachedAccountPayload;
-import com.ejbank.api.payload.account.AccountPayload;
-import com.ejbank.api.payload.account.AccountUserPayload;
-import com.ejbank.api.payload.account.CustomerAccountsResponsePayload;
+import com.ejbank.api.payload.account.*;
 import com.ejbank.entities.Account;
+import com.ejbank.entities.Advisor;
 import com.ejbank.entities.Customer;
 import com.ejbank.haricots.AccountBean;
+import com.ejbank.haricots.AdvisorBean;
 import com.ejbank.haricots.CustomerBean;
 
 import javax.ejb.EJB;
@@ -31,6 +30,9 @@ public class AccountsServer {
     @EJB
     private CustomerBean customerBean;
 
+    @EJB
+    private AdvisorBean advisorBean;
+
     @GET
     @Path("/{id}")
     public CustomerAccountsResponsePayload getCustomerAccounts(@PathParam("id") int id) {
@@ -43,9 +45,14 @@ public class AccountsServer {
 
     @GET
     @Path("/attached/{id}")
-    public List<AttachedAccountPayload> getAttachedUserOfAdvisor(@PathParam("id") int id) {
-        List<Account> accounts = accountBean.getAccountsByAdvisorId(id);
-        return accounts.stream().map(AttachedAccountPayload::new).collect(Collectors.toList());
+    public AttachedAccountsResponsePayload getAttachedUserOfAdvisor(@PathParam("id") int id) {
+        Optional<Advisor> advisor = advisorBean.getAdvisorById(id);
+
+        return advisor.map(value -> new AttachedAccountsResponsePayload(
+                value.getAttachedCustomers().stream().flatMap( c -> c.getAccounts().stream() )
+                    .map( a -> new AttachedAccountPayload(a, accountBean.getValidationNumberOfAccount(a)))
+                    .collect(Collectors.toList())
+        )).orElseGet(() -> new AttachedAccountsResponsePayload("You are not an advisor"));
     }
 
     @GET

@@ -22,6 +22,12 @@ public class AccountRepository extends RepositoryImpl<Account> {
 
     }
 
+    public long countAllSentTransaction(Account account) {
+        return (Long) this.em.createQuery("SELECT COUNT(t) FROM Transaction t WHERE t.accountFrom = :account")
+                .setParameter("account", account)
+                .getSingleResult();
+    }
+
     @SuppressWarnings("unchecked")
     public List<Transaction> getAllReceivedTransactions(Account account) {
         return this.em.createQuery("SELECT t FROM Transaction t WHERE t.accountTo = :account")

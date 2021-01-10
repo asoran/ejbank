@@ -2,27 +2,28 @@ package com.ejbank.api.payload.account;
 
 import java.util.List;
 
-public class CustomerAccountsResponsePayload {
+public class AttachedAccountsResponsePayload {
 
-    private final List<AccountPayload> accounts;
+    private final List<AttachedAccountPayload> accounts;
 
     private final String error;
 
-    public CustomerAccountsResponsePayload(List<AccountPayload> accounts) {
+    public AttachedAccountsResponsePayload(List<AttachedAccountPayload> accounts) {
         this.accounts = accounts;
         error = null;
     }
 
-    public CustomerAccountsResponsePayload(String error) {
+    public AttachedAccountsResponsePayload(String error) {
         this.accounts = null;
         this.error = error;
     }
 
-    public List<AccountPayload> getAccounts() {
+    public List<AttachedAccountPayload> getAccounts() {
         return accounts;
     }
 
     public String getError() {
         return error;
     }
+
 }

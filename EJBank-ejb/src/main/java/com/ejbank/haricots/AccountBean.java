@@ -32,11 +32,8 @@ public class AccountBean implements Bean {
         return customer.getAccounts();
     }
 
-    public List<Account> getAccountsByAdvisorId(int advisorId) {
-        Advisor advisor = advisorRepository.getById(advisorId);
-        /* TODO : NPE */
-        List<Customer> customers = advisor.getAttachedCustomers();
-        return customers.stream().flatMap( c -> c.getAccounts().stream() ).collect(Collectors.toList());
+    public long getValidationNumberOfAccount(Account account) {
+        return accountRepository.countAllSentTransaction(account);
     }
 
     /* TODO : do this method*/
