@@ -44,12 +44,12 @@ public class TransactionBean {
 		return initializeTransactionsStream(userId).limit(limit + 10).collect(Collectors.toList());
 	}
 
-	public Transaction addNewTransaction(int srcAccId, int destAccId, double amount, String comment, int authorId) {
+	public Transaction addNewTransaction(int srcAccId, int destAccId, double amount, String comment, int authorId, boolean applied) {
 		Account srcAcc = accountRepository.getById(srcAccId);
 		Account destAcc = accountRepository.getById(destAccId);
 		User user = userRepository.getById(authorId);
 
-		return transactionRepository.add(new Transaction(srcAcc, destAcc, user, amount, comment));
+		return transactionRepository.add(new Transaction(srcAcc, destAcc, user, amount, comment, applied));
 	}
 
 	public Transaction getTransactionsById(int transactionId) {

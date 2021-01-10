@@ -33,7 +33,7 @@ public class AccountBean implements Bean {
         return customer.getAccounts();
     }
 
-    public long getValidationNumberOfAccount(Account account) {
+    public long getNumberOfPendingValidation(Account account) {
         return accountRepository.countAllSentTransaction(account);
     }
 

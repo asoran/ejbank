@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/transaction")
@@ -85,16 +86,22 @@ public class TransactionServer {
 		}
 
 		Account srcAcc = oa.get();
+		if(srcAcc.getCustomer().getId() != transactionSubmission.getAuthor() &&
+			srcAcc.getCustomer().getAdvisor().getId() != transactionSubmission.getAuthor()) {
+			return new TransactionSubmissionResponsePayload(false, "Unauthorized access");
+		}
+
 		double srcAmount = srcAcc.getBalance();
 		int overdraft = srcAcc.getAccountType().getOverdraft();
 		double amount = transactionSubmission.getAmount();
 
 		if(srcAmount + overdraft >= amount) {
 			result = true;
+
 			transactionBean.addNewTransaction(transactionSubmission.getSource(), transactionSubmission.getDestination(),
 				transactionSubmission.getAmount(), transactionSubmission.getComment(),
-				transactionSubmission.getAuthor());
-			// Et appliquer la transaction dans la balance ????????
+				transactionSubmission.getAuthor(), amount < 1000);
+			// TODO: Et appliquer la transaction dans la balance ????????
 		}
 
 		return new TransactionSubmissionResponsePayload(result, result
@@ -106,24 +113,23 @@ public class TransactionServer {
 	@Path("/validation")
 	public TransactionValidationResponsePayload validateTransaction(TransactionValidationPayload transactionValidation) {
 		boolean isApprove = transactionValidation.isApprove();
-		// TODO: A t'il le droit de valider cette demande ????
-		if(true) {
-			Transaction tr = transactionBean.getTransactionsById(transactionValidation.getTransaction());
-			tr.setApplied(isApprove);
-			transactionBean.update(tr);
+
+		Transaction tr = transactionBean.getTransactionsById(transactionValidation.getTransaction());
+		if(tr.getAccountFrom().getCustomer().getAdvisor().getId() != transactionValidation.getAuthor()) {
+			return new TransactionValidationResponsePayload(false, "You can't validate this transaction",
+			"Unauthorized access");
 		}
 
+		tr.setApplied(isApprove);
+		transactionBean.update(tr);
 		return new TransactionValidationResponsePayload(true,
 			(isApprove ? "Approuvé" : "Refusé") + " avec succès !", null);
 	}
 
 	@GET
 	@Path("/validation/notification/{user_id}")
-	public int getValidationNotificationNumberById(@PathParam("user_id") int userId) {
-		ArrayList<Transaction> list = new ArrayList<>();
-		accountBean.getAccountsByCustomerId(userId).forEach(acc -> {
-			list.addAll(transactionBean.getAllTransactionsByAccountId(acc.getId()));
-		});
-		return list.size();
+	public long getValidationNotificationNumberById(@PathParam("user_id") int userId) {
+		return accountBean.getAccountsByCustomerId(userId).stream()
+				.mapToLong(accountBean::getNumberOfPendingValidation).sum();
 	}
 }

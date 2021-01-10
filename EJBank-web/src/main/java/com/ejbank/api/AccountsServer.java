@@ -53,7 +53,7 @@ public class AccountsServer {
 
         return advisor.map(value -> new AttachedAccountsResponsePayload(
                 value.getAttachedCustomers().stream().flatMap( c -> c.getAccounts().stream() )
-                    .map( a -> new AttachedAccountPayload(a, accountBean.getValidationNumberOfAccount(a)))
+                    .map( a -> new AttachedAccountPayload(a, accountBean.getNumberOfPendingValidation(a)))
                     .collect(Collectors.toList())
         )).orElseGet(() -> new AttachedAccountsResponsePayload("You are not an advisor"));
     }

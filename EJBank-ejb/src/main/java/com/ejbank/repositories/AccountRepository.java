@@ -23,7 +23,7 @@ public class AccountRepository extends RepositoryImpl<Account> {
     }
 
     public long countAllSentTransaction(Account account) {
-        return (Long) this.em.createQuery("SELECT COUNT(t) FROM Transaction t WHERE t.accountFrom = :account")
+        return (Long) this.em.createQuery("SELECT COUNT(t) FROM Transaction t WHERE t.accountFrom = :account AND t.applied = false")
                 .setParameter("account", account)
                 .getSingleResult();
     }

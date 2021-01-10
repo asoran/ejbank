@@ -11,12 +11,13 @@ public class Transaction {
 
 	}
 
-	public Transaction(Account accountFrom, Account accountTo, User author, double amount, String comment) {
+	public Transaction(Account accountFrom, Account accountTo, User author, double amount, String comment, boolean applied) {
 		this.accountFrom = accountFrom;
 		this.accountTo = accountTo;
 		this.author = author;
 		this.amount = amount;
 		this.comment = comment;
+		this.applied = applied;
 	}
 
 	@Id
