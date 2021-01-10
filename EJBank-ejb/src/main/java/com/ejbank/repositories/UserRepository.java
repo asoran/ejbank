@@ -11,7 +11,6 @@ public class UserRepository extends RepositoryImpl<User> {
     public Class<User> getClassT() {
         return User.class;
     }
-
-
+   
 
 }

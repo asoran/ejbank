@@ -6,7 +6,6 @@ import com.ejbank.entities.User;
 import com.ejbank.repositories.AdvisorRepository;
 import com.ejbank.repositories.CustomerRepository;
 import com.ejbank.repositories.UserRepository;
-import liquibase.exception.DatabaseException;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
