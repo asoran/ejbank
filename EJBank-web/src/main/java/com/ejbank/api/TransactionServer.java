@@ -52,7 +52,13 @@ public class TransactionServer {
 	@POST
 	@Path("/preview")
 	public TransactionPreviewResponsePayload getTransactionPreview(TransactionPreviewPayload transactionPreview) {
-		Account srcAcc = accountBean.getAccountById(transactionPreview.getSource());
+		Optional<Account> oa = accountBean.getAccountById(transactionPreview.getSource());
+
+		if ( !oa.isPresent() ) {
+			return new TransactionPreviewResponsePayload("Unknown source account");
+		}
+
+		Account srcAcc = oa.get();
 
 		boolean result = true;
 		double srcAmount = srcAcc.getBalance();
@@ -65,14 +71,20 @@ public class TransactionServer {
 			message = "Vous ne disposez pas d'un solde suffisant...";
 		}
 
-		return new TransactionPreviewResponsePayload(result, srcAmount, srcAmount - amount, message, null);
+		return new TransactionPreviewResponsePayload(result, srcAmount, srcAmount - amount, message);
 	}
 
 	@POST
 	@Path("/apply")
 	public TransactionSubmissionResponsePayload applyTransaction(TransactionSubmissionPayload transactionSubmission) {
 		boolean result = false;
-		Account srcAcc = accountBean.getAccountById(transactionSubmission.getSource());
+		Optional<Account> oa = accountBean.getAccountById(transactionSubmission.getSource());
+
+		if ( !oa.isPresent() ) {
+			return new TransactionSubmissionResponsePayload(false, "Unknown source account");
+		}
+
+		Account srcAcc = oa.get();
 		double srcAmount = srcAcc.getBalance();
 		int overdraft = srcAcc.getAccountType().getOverdraft();
 		double amount = transactionSubmission.getAmount();

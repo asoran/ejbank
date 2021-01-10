@@ -7,11 +7,19 @@ public class TransactionPreviewResponsePayload {
 	private final String message;
 	private final String error;
 
-	public TransactionPreviewResponsePayload(boolean result, double before, double after, String message, String error) {
+	public TransactionPreviewResponsePayload(boolean result, double before, double after, String message) {
 		this.result = result;
 		this.before = before;
 		this.after = after;
 		this.message = message;
+		this.error = null;
+	}
+
+	public TransactionPreviewResponsePayload(String error) {
+		this.result = false;
+		this.before = 0.0;
+		this.after = 0.0;
+		this.message = null;
 		this.error = error;
 	}
 
