@@ -19,11 +19,6 @@ public class UserServer {
 	private UserBean userBean;
 	
     @GET
-    @Path("/{id}")
-    public ServerPayload getStatus(@PathParam("age") int id) {
-        return new ServerPayload(true);
-    }
-    @GET
     @Path("/{user_id}")
     public User getUserInfo(@PathParam("age") int id) {
     	return userBean.getUserById(id);
