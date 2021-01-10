@@ -1,5 +1,6 @@
 package com.ejbank.api.payload;
 
+import com.ejbank.api.payload.account.AbstractAccount;
 import com.ejbank.entities.Account;
 
 /**

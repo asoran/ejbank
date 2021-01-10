@@ -1,11 +1,9 @@
 package com.ejbank.api;
 
-import com.ejbank.api.payload.AccountPayload;
 import com.ejbank.api.payload.transaction.*;
 import com.ejbank.entities.Account;
 import com.ejbank.entities.Transaction;
 import com.ejbank.entities.User;
-import com.ejbank.entities.Account;
 import com.ejbank.haricots.AccountBean;
 import com.ejbank.haricots.TransactionBean;
 import com.ejbank.haricots.UserBean;
@@ -15,7 +13,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 

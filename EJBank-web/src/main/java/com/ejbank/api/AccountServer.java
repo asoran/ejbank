@@ -1,6 +1,6 @@
 package com.ejbank.api;
 
-import com.ejbank.api.payload.AccountDetailPayload;
+import com.ejbank.api.payload.account.AccountDetailPayload;
 import com.ejbank.entities.Account;
 import com.ejbank.haricots.AccountBean;
 
