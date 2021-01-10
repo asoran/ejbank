@@ -1,12 +1,13 @@
 package com.ejbank.api;
 
 import com.ejbank.api.payload.account.*;
-import com.ejbank.entities.Account;
 import com.ejbank.entities.Advisor;
 import com.ejbank.entities.Customer;
+import com.ejbank.entities.User;
 import com.ejbank.haricots.AccountBean;
 import com.ejbank.haricots.AdvisorBean;
 import com.ejbank.haricots.CustomerBean;
+import com.ejbank.haricots.UserBean;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -15,7 +16,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,6 +32,9 @@ public class AccountsServer {
 
     @EJB
     private AdvisorBean advisorBean;
+
+    @EJB
+    private UserBean userBean;
 
     @GET
     @Path("/{id}")
@@ -57,9 +60,28 @@ public class AccountsServer {
 
     @GET
     @Path("/all/{id}")
-    public List<AccountUserPayload> getAllUserAccountWithUserData(@PathParam("id") int id) {
-        List<Account> accounts = accountBean.getAccountsByCustomerId(id);
-        return accounts.stream().map(AccountUserPayload::new).collect(Collectors.toList());
+    public AllAccountsResponsePayload getAllUserAccountWithUserData(@PathParam("id") int id) {
+        Optional<User> user = userBean.getUserById(id);
+
+        return user.map( u -> {
+            if ( u.getType().equals("advisor") ) {
+                Advisor advisor = userBean.recoverAdvisorFromUser(u);
+                return new AllAccountsResponsePayload(
+                        advisor.getAttachedCustomers().stream()
+                                .flatMap( c -> c.getAccounts().stream() )
+                                .map(AccountForTransactionPayload::new)
+                                .collect(Collectors.toList())
+                );
+            } else {
+                Customer customer = userBean.recoverCustomerFromUser(u);
+
+                return new AllAccountsResponsePayload(
+                        customer.getAccounts().stream()
+                            .map(AccountForTransactionPayload::new)
+                            .collect(Collectors.toList())
+                );
+            }
+        }).orElseGet( () -> new AllAccountsResponsePayload("Unknown user"));
     }
 
 }

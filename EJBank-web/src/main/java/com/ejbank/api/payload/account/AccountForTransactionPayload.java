@@ -11,11 +11,11 @@ import com.ejbank.entities.Account;
  *      "type": "Courant"
  *  }
  */
-public class AccountUserPayload extends AbstractAccount {
+public class AccountForTransactionPayload extends AbstractAccount {
 
     private final String name;
 
-    public AccountUserPayload(Account account) {
+    public AccountForTransactionPayload(Account account) {
         super(account);
         this.name = account.getCustomer().getEntireName();
     }

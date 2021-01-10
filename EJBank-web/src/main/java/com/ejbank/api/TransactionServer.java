@@ -14,6 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("/transaction")
@@ -37,8 +38,15 @@ public class TransactionServer {
 													@PathParam("user_id") int userId) {
 
 		List<Transaction> transactions = transactionBean.getAllTransactionsByAccountId(accountId, offset);
-		User ask = userBean.getUserById(userId);
-		return transactions.stream().map( t -> new TransactionPayload(t, ask.getType())).collect(Collectors.toList());
+		Optional<User> u = userBean.getUserById(userId);
+
+		/* TODO : manage error : */
+		if ( u.isPresent() ) {
+			User ask = u.get();
+			return transactions.stream().map( t -> new TransactionPayload(t, ask.getType())).collect(Collectors.toList());
+		} else {
+			return null;
+		}
 	}
 
 	@POST
