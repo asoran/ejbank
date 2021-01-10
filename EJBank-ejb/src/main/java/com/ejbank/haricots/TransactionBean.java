@@ -29,19 +29,19 @@ public class TransactionBean {
 	@Inject
 	private UserRepository userRepository;
 
-	private Stream<Transaction> initializeTransactionsStream(int userId) {
-		Account account = accountRepository.getById(userId);
+	private Stream<Transaction> initializeTransactionsStream(int accountId) {
+		Account account = accountRepository.getById(accountId);
 		List<Transaction> transactions =  accountRepository.getAllSentTransactions(account);
 		transactions.addAll(accountRepository.getAllReceivedTransactions(account));
 		return transactions.stream();
 	}
 
-	public List<Transaction> getAllTransactionsByAccountId(int userId) {
-		return initializeTransactionsStream(userId).collect(Collectors.toList());
+	public List<Transaction> getAllTransactionsByAccountId(int accountId) {
+		return initializeTransactionsStream(accountId).collect(Collectors.toList());
 	}
 
-	public List<Transaction> getAllTransactionsByAccountId(int userId, int limit) {
-		return initializeTransactionsStream(userId).limit(limit + 10).collect(Collectors.toList());
+	public List<Transaction> getAllTransactionsByAccountId(int accountId, int limit) {
+		return initializeTransactionsStream(accountId).limit(limit + 10).collect(Collectors.toList());
 	}
 
 	public Transaction addNewTransaction(int srcAccId, int destAccId, double amount, String comment, int authorId, boolean applied) {

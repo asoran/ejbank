@@ -2,6 +2,7 @@ package com.ejbank.api;
 
 import com.ejbank.api.payload.transaction.*;
 import com.ejbank.entities.Account;
+import com.ejbank.entities.Customer;
 import com.ejbank.entities.Transaction;
 import com.ejbank.entities.User;
 import com.ejbank.haricots.AccountBean;
@@ -34,19 +35,44 @@ public class TransactionServer {
 
 	@GET
 	@Path("/list/{account_id}/{offset}/{user_id}")
-	public List<TransactionPayload> listTransaction(@PathParam("account_id") int accountId,
-													@PathParam("offset") int offset,
-													@PathParam("user_id") int userId) {
+	public TransactionListResponsePayload listTransaction(@PathParam("account_id") int accountId,
+														  @PathParam("offset") int offset,
+														  @PathParam("user_id") int userId) {
 
-		List<Transaction> transactions = transactionBean.getAllTransactionsByAccountId(accountId, offset);
-		Optional<User> u = userBean.getUserById(userId);
+		Optional<Account> account = accountBean.getAccountById(accountId);
+		if ( !account.isPresent() ) {
+			return new TransactionListResponsePayload("Unknown account");
+		}
 
-		/* TODO : manage error : */
-		if ( u.isPresent() ) {
-			User ask = u.get();
-			return transactions.stream().map( t -> new TransactionPayload(t, ask.getType())).collect(Collectors.toList());
+		if ( offset < 0 ) {
+			return new TransactionListResponsePayload("Offset cannot be lower that 0");
+		}
+
+		Optional<User> user = userBean.getUserById(userId);
+		if ( user.isPresent() ) {
+			if ( user.get().getType().equals("customer") ) {
+				if ( account.get().getCustomer().getId() != userId ) {
+					return new TransactionListResponsePayload("Access forbidden");
+				} else {
+					List<TransactionPayload> tps = transactionBean.getAllTransactionsByAccountId(accountId, offset)
+							.stream().map( t -> new TransactionPayload(t, user.get().getType()))
+							.collect(Collectors.toList());
+
+					return new TransactionListResponsePayload(tps.size(), tps);
+				}
+			} else {
+				if ( account.get().getCustomer().getAdvisor().getId() != userId ) {
+					return new TransactionListResponsePayload("Access forbidden");
+				} else {
+					List<TransactionPayload> tps = transactionBean.getAllTransactionsByAccountId(accountId, offset)
+							.stream().map( t -> new TransactionPayload(t, user.get().getType()))
+							.collect(Collectors.toList());
+
+					return new TransactionListResponsePayload(tps.size(), tps);
+				}
+			}
 		} else {
-			return null;
+			return new TransactionListResponsePayload("Unknown user");
 		}
 	}
 
