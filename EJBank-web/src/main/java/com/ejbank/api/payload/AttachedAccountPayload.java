@@ -12,13 +12,13 @@ import com.ejbank.entities.Account;
  *     "validation": 0
  * }
  */
-public class AccountFullPayload extends AbstractAccount {
+public class AttachedAccountPayload extends AbstractAccount {
 
     private final String name;
 
     private final int validation;
 
-    public AccountFullPayload(Account account) {
+    public AttachedAccountPayload(Account account) {
         super(account);
 
         this.name = account.getCustomer().getEntireName();

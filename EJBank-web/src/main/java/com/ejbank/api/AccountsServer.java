@@ -1,6 +1,6 @@
 package com.ejbank.api;
 
-import com.ejbank.api.payload.AccountFullPayload;
+import com.ejbank.api.payload.AttachedAccountPayload;
 import com.ejbank.api.payload.AccountPayload;
 import com.ejbank.api.payload.AccountUserPayload;
 import com.ejbank.entities.Account;
@@ -33,9 +33,9 @@ public class AccountsServer {
 
     @GET
     @Path("/attached/{id}")
-    public List<AccountFullPayload> getAllUserAccountWithCompleteData(@PathParam("id") int id) {
-        List<Account> accounts = accountBean.getAccountsByCustomerId(id);
-        return accounts.stream().map(AccountFullPayload::new).collect(Collectors.toList());
+    public List<AttachedAccountPayload> getAttachedUserOfAdvisor(@PathParam("id") int id) {
+        List<Account> accounts = accountBean.getAccountsByAdvisorId(id);
+        return accounts.stream().map(AttachedAccountPayload::new).collect(Collectors.toList());
     }
 
     @GET
