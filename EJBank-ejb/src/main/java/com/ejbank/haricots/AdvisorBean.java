@@ -1,7 +1,6 @@
 package com.ejbank.haricots;
 
 import com.ejbank.entities.Advisor;
-import com.ejbank.entities.Customer;
 import com.ejbank.repositories.AdvisorRepository;
 
 import javax.ejb.LocalBean;

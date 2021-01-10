@@ -1,9 +1,8 @@
 package com.ejbank.haricots;
 
-import com.ejbank.entities.*;
-import com.ejbank.repositories.AccountRepository;
 import com.ejbank.entities.Account;
 import com.ejbank.entities.Transaction;
+import com.ejbank.entities.User;
 import com.ejbank.repositories.AccountRepository;
 import com.ejbank.repositories.TransactionRepository;
 import com.ejbank.repositories.UserRepository;
@@ -11,7 +10,6 @@ import com.ejbank.repositories.UserRepository;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

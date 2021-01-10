@@ -20,22 +20,19 @@ public class Test {
     @EJB
     private TestBeanLocal testBean;
 
-//    @EJB
-//    private AccountHaricot accountHaricot;
-    
     @GET
     @Path("/ejb")
     public String testEJB() {
         return testBean.test();
     }
-    
+
     @GET
     @Path("/people/{age}")
     public PeoplePayload testPayloadReponse(@PathParam("age") Integer age) {
         //Account a = accountHaricot.account(12);
         return new PeoplePayload("Jean", "Dupont", age);
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/post")

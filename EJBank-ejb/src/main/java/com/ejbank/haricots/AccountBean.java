@@ -1,7 +1,6 @@
 package com.ejbank.haricots;
 
 import com.ejbank.entities.Account;
-import com.ejbank.entities.Advisor;
 import com.ejbank.entities.Customer;
 import com.ejbank.entities.User;
 import com.ejbank.repositories.AccountRepository;
