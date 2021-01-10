@@ -1,6 +1,5 @@
 package com.ejbank.api;
 
-
 import java.util.Optional;
 
 import javax.ejb.EJB;
@@ -17,20 +16,16 @@ import com.ejbank.haricots.UserBean;
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserServer {
-	
 	@EJB
 	private UserBean userBean;
-	
+
     @GET
     @Path("/{user_id}")
     public UserPayload getUserInfo(@PathParam("age") int id) {
     	Optional<User> usr= userBean.getUserById(id);
-    	  if ( !usr.isPresent() ) {
-              return new UserPayload(" unknown ", " user");
-          }
-
-    	return new UserPayload(usr.get().getFirstname(), usr.get().getLastname());
-    }
+		return usr.map(user -> new UserPayload(user.getFirstname(), user.getLastname()))
+			.orElseGet(() -> new UserPayload(" unknown ", " user"));
+	}
 
 }
 
