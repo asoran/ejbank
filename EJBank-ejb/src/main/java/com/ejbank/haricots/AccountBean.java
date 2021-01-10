@@ -51,4 +51,8 @@ public class AccountBean implements Bean {
 
 		return account.getCustomer().getAdvisor().getId() == user.getId();
 	}
+
+	public Account updateAccount(Account account) {
+    	return accountRepository.update(account);
+	}
 }

@@ -2,7 +2,6 @@ package com.ejbank.api;
 
 import com.ejbank.api.payload.transaction.*;
 import com.ejbank.entities.Account;
-import com.ejbank.entities.Customer;
 import com.ejbank.entities.Transaction;
 import com.ejbank.entities.User;
 import com.ejbank.haricots.AccountBean;
@@ -13,10 +12,8 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/transaction")
@@ -106,9 +103,13 @@ public class TransactionServer {
 	public TransactionSubmissionResponsePayload applyTransaction(TransactionSubmissionPayload transactionSubmission) {
 		boolean result = false;
 		Optional<Account> oa = accountBean.getAccountById(transactionSubmission.getSource());
+		Optional<Account> od = accountBean.getAccountById(transactionSubmission.getDestination());
 
 		if ( !oa.isPresent() ) {
 			return new TransactionSubmissionResponsePayload(false, "Unknown source account");
+		}
+		if(!od.isPresent()) {
+			return new TransactionSubmissionResponsePayload(false, "Unknown destination account");
 		}
 
 		Account srcAcc = oa.get();
@@ -123,11 +124,14 @@ public class TransactionServer {
 
 		if(srcAmount + overdraft >= amount) {
 			result = true;
+			boolean applied = amount < 1000;
 
 			transactionBean.addNewTransaction(transactionSubmission.getSource(), transactionSubmission.getDestination(),
 				transactionSubmission.getAmount(), transactionSubmission.getComment(),
-				transactionSubmission.getAuthor(), amount < 1000);
-			// TODO: Et appliquer la transaction dans la balance ????????
+				transactionSubmission.getAuthor(), applied);
+			if(applied) {
+				doTransation(srcAcc, od.get(), amount);
+			}
 		}
 
 		return new TransactionSubmissionResponsePayload(result, result
@@ -135,12 +139,20 @@ public class TransactionServer {
 			: "Vous ne disposez pas d'un solde suffisant");
 	}
 
+	private void doTransation(Account src, Account dst, double amount) {
+		src.setBalance(src.getBalance() - amount);
+		dst.setBalance(dst.getBalance() + amount);
+		accountBean.updateAccount(src);
+		accountBean.updateAccount(dst);
+		// TODO: atomic ?
+	}
+
 	@POST
 	@Path("/validation")
 	public TransactionValidationResponsePayload validateTransaction(TransactionValidationPayload transactionValidation) {
 		boolean isApprove = transactionValidation.isApprove();
-
 		Transaction tr = transactionBean.getTransactionsById(transactionValidation.getTransaction());
+
 		if(tr.getAccountFrom().getCustomer().getAdvisor().getId() != transactionValidation.getAuthor()) {
 			return new TransactionValidationResponsePayload(false, "You can't validate this transaction",
 			"Unauthorized access");
@@ -148,6 +160,11 @@ public class TransactionServer {
 
 		tr.setApplied(isApprove);
 		transactionBean.update(tr);
+
+		if(isApprove) {
+			doTransation(tr.getAccountFrom(), tr.getAccountTo(), tr.getAmount());
+		}
+
 		return new TransactionValidationResponsePayload(true,
 			(isApprove ? "Approuvé" : "Refusé") + " avec succès !", null);
 	}
